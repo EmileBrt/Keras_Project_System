@@ -43,8 +43,12 @@ model.add(keras.layers.Dense(2))
 
 X_train, X_test, y_train, y_test = train_test_split(df_ohe, label, test_size=0.5, random_state=42)
 
-bce = keras.losses.BinaryCrossentropy(reduction='sum_over_batch_size')
-model.compile(loss=bce)
+model.compile(
+    optimizer=keras.optimizers.RMSprop(learning_rate=1e-3),
+    loss=keras.losses.SparseCategoricalCrossentropy(),
+    metrics=[keras.metrics.SparseCategoricalAccuracy()],
+)
+
 model.fit(X_train, y_train, epochs=10)
 
 print("Evaluate on test data")
