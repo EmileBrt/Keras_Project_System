@@ -49,7 +49,7 @@ model.compile(
     metrics=[keras.metrics.SparseCategoricalAccuracy()],
 )
 
-model.fit(X_train, y_train, epochs=10)
+model.fit(X_train, y_train, batch_size=64, epochs=10)
 
 print("Evaluate on test data")
 results = model.evaluate(X_test, y_test)
