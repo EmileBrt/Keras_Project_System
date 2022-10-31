@@ -8,7 +8,6 @@ from sklearn.model_selection import train_test_split
 np.set_printoptions(precision=3, suppress=True,threshold=np.inf)
 pd.options.display.max_rows = 999
 
-
 df = pd.read_csv("kddcup99_csv.csv")
 col2encode = ["protocol_type","service","flag"]
 ohe_col = pd.get_dummies(df[col2encode],columns=col2encode)
@@ -26,31 +25,33 @@ for a in attack_values:
 label = df_ohe["label"].map(d_attack)
 df_ohe = df_ohe.drop(columns="label",axis=1)
 
-
 model = keras.Sequential(name="my_sequential")
 
 model.add(keras.Input(shape=(118,)))
-model.add(keras.layers.Dense(64,use_bias=True,activation="relu"))
-model.add(keras.layers.BatchNormalization(1))
+model.add(keras.layers.Dense(64,use_bias=True))
+model.add(keras.layers.BatchNormalization())
 model.add(keras.layers.Dropout(0.5))
-model.add(keras.layers.Dense(64,use_bias=True,activation="relu"))
-model.add(keras.layers.BatchNormalization(1))
+model.add(keras.layers.ReLU())
+model.add(keras.layers.Dense(64,use_bias=True))
+model.add(keras.layers.BatchNormalization())
 model.add(keras.layers.Dropout(0.5))
-model.add(keras.layers.Dense(64,use_bias=True,activation="relu"))
-model.add(keras.layers.BatchNormalization(1))
+model.add(keras.layers.ReLU())
+model.add(keras.layers.Dense(64,use_bias=True))
+model.add(keras.layers.BatchNormalization())
 model.add(keras.layers.Dropout(0.5))
-model.add(keras.layers.Dense(2))
+model.add(keras.layers.ReLU())
+model.add(keras.layers.Dense(1,use_bias=True))
 
 X_train, X_test, y_train, y_test = train_test_split(df_ohe, label, test_size=0.5, random_state=42)
 
 model.compile(
-    optimizer=keras.optimizers.RMSprop(learning_rate=1e-3),
-    loss=keras.losses.SparseCategoricalCrossentropy(),
-    metrics=[keras.metrics.SparseCategoricalAccuracy()],
+    optimizer=keras.optimizers.Adam(learning_rate=1e-3),
+    loss=keras.losses.BinaryCrossentropy(),
+    metrics =['accuracy']
 )
 
 model.fit(X_train, y_train, batch_size=64, epochs=10)
 
 print("Evaluate on test data")
 results = model.evaluate(X_test, y_test)
-print("test loss, test acc:", results)
+print("test acc:", results)
