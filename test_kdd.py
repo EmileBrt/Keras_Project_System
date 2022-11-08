@@ -26,7 +26,6 @@ label = df_ohe["label"].map(d_attack)
 df_ohe = df_ohe.drop(columns="label",axis=1)
 
 model = keras.Sequential(name="my_sequential")
-
 model.add(keras.Input(shape=(118,)))
 model.add(keras.layers.Dense(64,use_bias=True))
 model.add(keras.layers.BatchNormalization())
@@ -42,7 +41,7 @@ model.add(keras.layers.Dropout(0.5))
 model.add(keras.layers.ReLU())
 model.add(keras.layers.Dense(1,use_bias=True))
 
-X_train, X_test, y_train, y_test = train_test_split(df_ohe, label, test_size=0.9, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(df_ohe, label, test_size=0.25, random_state=42)
 
 model.compile(
     optimizer=keras.optimizers.Adam(learning_rate=1e-3),
@@ -50,7 +49,7 @@ model.compile(
     metrics =['accuracy']
 )
 
-model.fit(X_train, y_train, batch_size=64, epochs=10,validation_data=(X_train,y_train))
+model.fit(X_train, y_train, batch_size=64, epochs=10,validation_data=(X_test,y_test))
 
 print("Evaluate on test data")
 results = model.evaluate(X_test, y_test)

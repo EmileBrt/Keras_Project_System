@@ -21,8 +21,6 @@ print(df1.shape)
 print(df2.shape)
 print(df.shape)
 
-print(df.dtypes)
-
 col2encode = ["proto","service","state"]
 ohe_col = pd.get_dummies(df[col2encode],columns=col2encode)
 df = df.drop(columns=col2encode)
@@ -50,7 +48,7 @@ model.add(keras.layers.Dropout(0.5))
 model.add(keras.layers.ReLU())
 model.add(keras.layers.Dense(1,use_bias=True))
 
-X_train, X_test, y_train, y_test = train_test_split(df_ohe, Y, test_size=0.9, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(df_ohe, Y, test_size=0.25, random_state=42)
 
 model.compile(
     optimizer=keras.optimizers.Adam(learning_rate=1e-3),
