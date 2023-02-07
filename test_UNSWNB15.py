@@ -14,22 +14,19 @@ pd.options.display.max_rows = 999
 
 df1 = pd.read_csv("UNSW_NB15_testing-set.csv")
 df2 = pd.read_csv("UNSW_NB15_training-set.csv")
-
 df = pd.concat([df1,df2])
-
-print(df1.shape)
-print(df2.shape)
-print(df.shape)
-
 col2encode = ["proto","service","state"]
 ohe_col = pd.get_dummies(df[col2encode],columns=col2encode)
 df = df.drop(columns=col2encode)
 df = df.drop(columns=["attack_cat","id"])
 df_ohe = pd.concat([df,ohe_col],axis=1)
 d_attack = {0:False,1:True}
-
 Y = df_ohe["label"].map(d_attack)
 df_ohe = df_ohe.drop(columns=["label"])
+
+print(df1.shape)
+print(df2.shape)
+print(df.shape)
 
 model = keras.Sequential(name="my_sequential")
 
@@ -62,4 +59,3 @@ print("Evaluate on test data")
 results = model.evaluate(X_test, y_test)
 print("test acc:", results)
 model.save("model")
-
